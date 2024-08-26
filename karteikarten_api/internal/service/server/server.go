@@ -46,10 +46,15 @@ func (srv *Server) Init(wg *sync.WaitGroup) error {
 	srv.echo = echo.New()
 	srv.echo.HideBanner = true
 	srv.echo.HidePort = true
-	srv.echo.Use(middleware.Logger())
+	loggerConfig := middleware.DefaultLoggerConfig
+	if viper.GetString("log.format") == "text" {
+		loggerConfig.Format = "REQUEST: ${time_rfc3339} ${latency_human} \t ${status} ${method} \t ${uri} \t ${error}\n"
+	}
+	srv.echo.Use(middleware.LoggerWithConfig(loggerConfig))
 	srv.echo.Use(middleware.Recover())
+	srv.echo.Use(middleware.CORS())
 
-	baseURL := "/karteikarten/api"
+	baseURL := "/api"
 	apiGroup := srv.echo.Group(baseURL)
 	apiGroup.GET("/health", func(c echo.Context) error {
 		return c.JSON(http.StatusOK, struct {

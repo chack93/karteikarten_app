@@ -1,0 +1,13 @@
+{
+  "app.title": "Karteikarten",
+  "login.title": "Login",
+  "login.field.join_code.label": "Beitrittscode",
+  "login.field.join_code.placeholder": "Beitrittscode",
+  "login.field.password.label": "Passwort",
+  "login.field.password.placeholder": "Passwort",
+  "login.action.create": "Erstellen",
+  "login.action.join": "Beitreten",
+  "login.error.create_failed": "Erstellen eines neuen Raums ist fehlgeschlagen. Versuche es später erneut.",
+  "login.error.unknown_join_code": "Unbekannter Beitrittscode. Überprüfe die Eingabe.",
+  "about.title": "Impressum"
+}

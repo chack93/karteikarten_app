@@ -5,7 +5,6 @@ import (
 	"fmt"
 
 	"github.com/chack93/karteikarten_api/internal/domain/client"
-	"github.com/chack93/karteikarten_api/internal/domain/history"
 	"github.com/chack93/karteikarten_api/internal/domain/session"
 	"github.com/chack93/karteikarten_api/internal/domain/socketmsg"
 	"github.com/chack93/karteikarten_api/internal/service/logger"
@@ -84,15 +83,9 @@ func UpdateClientsOfGroup(groupID uuid.UUID) (err error) {
 		log.Errorf("read client list failed, gID: %s, err: %v", groupID.String(), err)
 		return
 	}
-	var hiList []history.History
-	if err = history.ListHistoryBySessionID(groupID, &hiList); err != nil {
-		log.Errorf("read client list failed, gID: %s, err: %v", groupID.String(), err)
-		return
-	}
 	msgBody := socketmsg.SocketMsgBodyUpdate{
-		Session:     &se,
-		ClientList:  &clList,
-		HistoryList: &hiList,
+		Session:    &se,
+		ClientList: &clList,
 	}
 
 	for _, el := range clList {
@@ -186,30 +179,6 @@ func handleUpdateRequest(msg *nats.Msg) {
 			}
 		}
 
-		if oldGameStatus != "reveal" && updateRequest.Session.GameStatus != nil && *updateRequest.Session.GameStatus == "reveal" {
-			gameUUID := uuid.New().String()
-
-			var clientList []client.Client
-			if err := client.ListClientOfSession(groupID, &clientList); err != nil {
-				log.Errorf("update failed, action: %s, cID: %s, gID: %s, err: %v", action, clientID.String(), groupID.String(), err)
-			}
-
-			for _, el := range clientList {
-				cid := el.ID.String()
-				gid := groupID.String()
-				if err := history.CreateHistory(&history.History{
-					HistoryNew: history.HistoryNew{
-						ClientId:   &cid,
-						ClientName: el.Name,
-						Estimation: el.Estimation,
-						SessionId:  &gid,
-					},
-					GameId: &gameUUID,
-				}); err != nil {
-					log.Errorf("add history item failed, action: %s, cID: %s, gID: %s, err: %v", action, clientID.String(), groupID.String(), err)
-				}
-			}
-		}
 	}
 
 	if err := client.UpdateClient(clientID, &cl); err != nil {

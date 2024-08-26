@@ -7,7 +7,6 @@ components:
           type: object
           required:
           - action
-          - clientId
           properties:
             action:
               type: string
@@ -33,7 +32,3 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Client'
-        historyList:
-          type: array
-          items:
-            $ref: '#/components/schemas/History'

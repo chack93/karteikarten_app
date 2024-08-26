@@ -1,7 +1,7 @@
 paths:
   /session:
     post:
-      description: Creates a new session with random joinCode, session will be destroyed after 48h of inactivity. (no estimation or update to the session settings)
+      description: Creates a new session with random joinCode, session will be destroyed after 1y of inactivity.
       operationId: createSession
       requestBody:
         description: Details about new session to create
@@ -61,19 +61,12 @@ paths:
               schema:
                 $ref: '../common/common.yaml#/components/schemas/Error'
     put:
-      description: update session of id, can only be done by the session owner
+      description: update session of id
       operationId: updateSession
       parameters:
         - name: id
           in: path
           description: id of session
-          required: true
-          schema:
-            type: string
-            format: uuid
-        - name: clientId
-          in: query
-          description: owner client id 
           required: true
           schema:
             type: string
@@ -154,14 +147,5 @@ components:
           properties:
             description:
               type: string
-            ownerClientId:
+            csv:
               type: string
-              format: uuid
-            cardSelectionList:
-              type: string
-            gameStatus:
-              type: string
-              description: |
-                states
-                * init: new game started, cards hidden
-                * reveal: game finished, cards are visible & current game is written to history

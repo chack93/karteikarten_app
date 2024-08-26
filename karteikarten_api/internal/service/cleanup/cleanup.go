@@ -6,13 +6,13 @@ import (
 
 	"github.com/chack93/karteikarten_api/internal/domain/client"
 	"github.com/chack93/karteikarten_api/internal/domain/globalconfig"
-	"github.com/chack93/karteikarten_api/internal/domain/history"
 	"github.com/chack93/karteikarten_api/internal/domain/session"
 	"github.com/chack93/karteikarten_api/internal/service/logger"
 	"github.com/chack93/karteikarten_api/internal/service/msgsystem"
 	"github.com/go-co-op/gocron"
 	"github.com/google/uuid"
 	"github.com/nats-io/nats.go"
+	"github.com/sirupsen/logrus"
 )
 
 var log = logger.Get()
@@ -29,26 +29,13 @@ func Init() error {
 			log.Errorf("cleanup, fetch session list failed, err: %v", err)
 			return
 		}
-		expireTime := time.Now().AddDate(0, 0, -14)
+		expireTime := time.Now().AddDate(-1, 0, 0)
 		expiredSessionIDList := make([]uuid.UUID, 0)
 		for _, el := range sessionList {
 			if el.UpdatedAt.Before(expireTime) {
 				expiredSessionIDList = append(expiredSessionIDList, el.ID)
 				if err = session.DeleteSession(el.ID, &el); err != nil {
 					log.Warnf("cleanup, delete session failed, session-id: %s, err: %v", el.ID.String(), err)
-				}
-			}
-		}
-		for _, el := range expiredSessionIDList {
-			var historyList []history.History
-			if err = history.ListHistoryBySessionID(el, &historyList); err != nil {
-				log.Warnf("cleanup, list history of session failed, session-id: %s, err: %v", el.String(), err)
-			}
-			if historyList != nil {
-				for _, hel := range historyList {
-					if err = history.DeleteHistory(hel.ID, &hel); err != nil {
-						log.Warnf("cleanup, delete history failed, history-id: %s, err: %v", hel.ID.String(), err)
-					}
 				}
 			}
 		}
@@ -100,7 +87,7 @@ func Init() error {
 			msgSys.PublishMsg(natsMsg)
 		}
 	}); err != nil {
-		log.Errorf("setup scheduler failed, err: %v", err)
+		logrus.Errorf("setup scheduler failed, err: %v", err)
 		return err
 	}
 

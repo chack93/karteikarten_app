@@ -4,7 +4,7 @@ info:
   title: __APP_NAME__ REST api 
   description: __APP_NAME__ REST api
 servers:
-  - url: /api/karteikarten
+  - url: /api
 paths:
   /ws/{clientId}/{groupId}:
     get:

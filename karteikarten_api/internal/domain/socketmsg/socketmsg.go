@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 
 	"github.com/chack93/karteikarten_api/internal/domain/client"
-	"github.com/chack93/karteikarten_api/internal/domain/history"
 	"github.com/chack93/karteikarten_api/internal/domain/session"
 )
 
@@ -14,10 +13,9 @@ type SocketMsgHead struct {
 	GroupID  string `json:"groupId"`
 }
 type SocketMsgBodyUpdate struct {
-	Session     *session.Session   `json:"session"`
-	Client      *client.Client     `json:"client"`
-	ClientList  *[]client.Client   `json:"clientList"`
-	HistoryList *[]history.History `json:"historyList"`
+	Session    *session.Session `json:"session"`
+	Client     *client.Client   `json:"client"`
+	ClientList *[]client.Client `json:"clientList"`
 }
 type SocketMsg struct {
 	Head SocketMsgHead   `json:"head"`

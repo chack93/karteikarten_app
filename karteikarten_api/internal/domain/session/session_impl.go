@@ -25,9 +25,7 @@ func (*ServerInterfaceImpl) CreateSession(ctx echo.Context) error {
 	joinCode := base32.StdEncoding.EncodeToString(hash)[:8]
 	newEntry.JoinCode = &joinCode
 	newEntry.Description = requestBody.Description
-	newEntry.CardSelectionList = requestBody.CardSelectionList
-	newEntry.OwnerClientId = requestBody.OwnerClientId
-	newEntry.GameStatus = requestBody.GameStatus
+	newEntry.Csv = requestBody.Csv
 	if err := CreateSession(&newEntry); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "failed to create")
 	}

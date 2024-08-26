@@ -25,14 +25,8 @@ type Session struct {
 // SessionNew defines model for SessionNew.
 type SessionNew struct {
 	// Embedded fields due to inline allOf schema
-	CardSelectionList *string `json:"cardSelectionList,omitempty"`
-	Description       *string `json:"description,omitempty"`
-
-	// states
-	// * init: new game started, cards hidden
-	// * reveal: game finished, cards are visible & current game is written to history
-	GameStatus    *string `json:"gameStatus,omitempty"`
-	OwnerClientId *string `json:"ownerClientId,omitempty"`
+	Csv         *string `json:"csv,omitempty"`
+	Description *string `json:"description,omitempty"`
 }
 
 // CreateSessionJSONBody defines parameters for CreateSession.
@@ -40,12 +34,6 @@ type CreateSessionJSONBody SessionNew
 
 // UpdateSessionJSONBody defines parameters for UpdateSession.
 type UpdateSessionJSONBody SessionNew
-
-// UpdateSessionParams defines parameters for UpdateSession.
-type UpdateSessionParams struct {
-	// owner client id
-	ClientId string `json:"clientId"`
-}
 
 // CreateSessionJSONRequestBody defines body for CreateSession for application/json ContentType.
 type CreateSessionJSONRequestBody CreateSessionJSONBody
@@ -66,7 +54,7 @@ type ServerInterface interface {
 	ReadSession(ctx echo.Context, id string) error
 
 	// (PUT /session/{id})
-	UpdateSession(ctx echo.Context, id string, params UpdateSessionParams) error
+	UpdateSession(ctx echo.Context, id string) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -126,17 +114,8 @@ func (w *ServerInterfaceWrapper) UpdateSession(ctx echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
 	}
 
-	// Parameter object where we will unmarshal all parameters from the context
-	var params UpdateSessionParams
-	// ------------- Required query parameter "clientId" -------------
-
-	err = runtime.BindQueryParameter("form", true, true, "clientId", ctx.QueryParams(), &params.ClientId)
-	if err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter clientId: %s", err))
-	}
-
 	// Invoke the callback with all the unmarshalled arguments
-	err = w.Handler.UpdateSession(ctx, id, params)
+	err = w.Handler.UpdateSession(ctx, id)
 	return err
 }
 

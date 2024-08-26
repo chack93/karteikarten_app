@@ -3,8 +3,8 @@ const nextConfig = {
   output: "export",
   distDir: "out",
   reactStrictMode: true,
-  basePath: "/karteikarten",
-  assetPrefix: "/karteikarten",
+  //basePath: "/karteikarten",
+  //assetPrefix: "/karteikarten",
 };
 
 module.exports = nextConfig;

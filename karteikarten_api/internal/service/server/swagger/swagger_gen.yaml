@@ -56,33 +56,6 @@ components:
       items:
         $ref: '#/components/schemas/GlobalConfig'
       type: array
-    History:
-      allOf:
-      - $ref: '#/components/schemas/BaseModel'
-      - $ref: '#/components/schemas/HistoryNew'
-      - properties:
-          gameId:
-            format: uuid
-            type: string
-        type: object
-    HistoryList:
-      items:
-        $ref: '#/components/schemas/History'
-      type: array
-    HistoryNew:
-      allOf:
-      - properties:
-          clientId:
-            format: uuid
-            type: string
-          clientName:
-            type: string
-          estimation:
-            type: string
-          sessionId:
-            format: uuid
-            type: string
-        type: object
     Session:
       allOf:
       - $ref: '#/components/schemas/BaseModel'
@@ -96,18 +69,9 @@ components:
     SessionNew:
       allOf:
       - properties:
-          cardSelectionList:
+          csv:
             type: string
           description:
-            type: string
-          gameStatus:
-            description: |
-              states
-              * init: new game started, cards hidden
-              * reveal: game finished, cards are visible & current game is written to history
-            type: string
-          ownerClientId:
-            format: uuid
             type: string
         type: object
     SocketMsg:
@@ -129,7 +93,6 @@ components:
               type: string
           required:
           - action
-          - clientId
           type: object
       type: object
     SocketMsgBodyUpdate:
@@ -139,10 +102,6 @@ components:
         clientList:
           items:
             $ref: '#/components/schemas/Client'
-          type: array
-        historyList:
-          items:
-            $ref: '#/components/schemas/History'
           type: array
         session:
           $ref: '#/components/schemas/Session'
@@ -255,41 +214,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
           description: unexpected error
-  /history/{sessionId}:
-    get:
-      description: Read history of sessionId.
-      operationId: listHistory
-      parameters:
-      - description: id of session
-        in: path
-        name: sessionId
-        required: true
-        schema:
-          format: uuid
-          type: string
-      responses:
-        "200":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HistoryList'
-          description: history response
-        "404":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: not found
-        default:
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: unexpected error
   /session:
     post:
       description: Creates a new session with random joinCode, session will be destroyed
-        after 48h of inactivity. (no estimation or update to the session settings)
+        after 1y of inactivity.
       operationId: createSession
       requestBody:
         content:
@@ -349,19 +277,12 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: unexpected error
     put:
-      description: update session of id, can only be done by the session owner
+      description: update session of id
       operationId: updateSession
       parameters:
       - description: id of session
         in: path
         name: id
-        required: true
-        schema:
-          format: uuid
-          type: string
-      - description: owner client id
-        in: query
-        name: clientId
         required: true
         schema:
           format: uuid
@@ -466,4 +387,4 @@ paths:
                 $ref: '#/components/schemas/Error'
           description: unexpected error
 servers:
-- url: /api/karteikarten
+- url: /api

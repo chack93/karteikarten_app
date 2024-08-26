@@ -2,6 +2,7 @@ import React, { ReactElement } from "react";
 import Head from "next/head";
 import styles from "../styles/Layout.module.css";
 import Link from "next/link";
+import { useTranslation } from "./translation/store";
 
 export type LayoutParam = {
   children: ReactElement;
@@ -9,10 +10,14 @@ export type LayoutParam = {
 };
 
 export default function Layout({ children, title = "" }: LayoutParam) {
+  const { t } = useTranslation();
+
   return (
     <>
       <Head>
-        <title>Karteikarten {title}</title>
+        <title>
+          {t("app.title")} {title}
+        </title>
         <meta name="description" content="Karteikarten" />
         <link rel="icon" href="/karteikarten/favicon/favicon.ico" />
         <link
@@ -66,7 +71,7 @@ export default function Layout({ children, title = "" }: LayoutParam) {
       <footer className="footer footer-center p-4 text-base-content bg-primary fixed bottom-0">
         <div>
           <Link href="/about">
-            <a className="link link-hover">About</a>
+            <a className="link link-hover">{t("about.title")}</a>
           </Link>
         </div>
       </footer>
