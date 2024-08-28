@@ -209,6 +209,47 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
           description: unexpected error
+  /datasync/{clientId}/{groupId}:
+    get:
+      description: |
+        websocket endpoint.
+        The socket-messages head describes
+        * what action shall be performed (action)
+        * the origin/destination of the message (clientId)
+        * the group this message is intended for (groupId)
+        * actions
+          * (update) transmit latest client/session state from client to server or vice versa
+      operationId: sessionWebsocket
+      parameters:
+      - description: client id
+        in: path
+        name: clientId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      - description: group id
+        in: path
+        name: groupId
+        required: true
+        schema:
+          format: uuid
+          type: string
+      responses:
+        "101":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SocketMsg'
+          description: successfully upgraded to websocket connection
+        "404":
+          description: session of id not found
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+          description: unexpected error
   /session:
     post:
       description: Creates a new session with random joinCode, session will be destroyed
@@ -334,47 +375,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
           description: not found
-        default:
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-          description: unexpected error
-  /ws/{clientId}/{groupId}:
-    get:
-      description: |
-        websocket endpoint.
-        The socket-messages head describes
-        * what action shall be performed (action)
-        * the origin/destination of the message (clientId)
-        * the group this message is intended for (groupId)
-        * actions
-          * (update) transmit latest client/session state from client to server or vice versa
-      operationId: sessionWebsocket
-      parameters:
-      - description: client id
-        in: path
-        name: clientId
-        required: true
-        schema:
-          format: uuid
-          type: string
-      - description: group id
-        in: path
-        name: groupId
-        required: true
-        schema:
-          format: uuid
-          type: string
-      responses:
-        "101":
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SocketMsg'
-          description: successfully upgraded to websocket connection
-        "404":
-          description: session of id not found
         default:
           content:
             application/json:

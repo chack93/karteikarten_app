@@ -47,7 +47,7 @@ export function Close() {
 export function Connect(clientId: string, groupId: string) {
   const apiUrl = new URL(baseUrl());
   const protocol = apiUrl.href.indexOf("https") !== -1 ? "wss://" : "ws://";
-  const url = `${protocol}${apiUrl.host}/api/ws/${clientId}/${groupId}`;
+  const url = `${protocol}${apiUrl.host}/api/datasync/${clientId}/${groupId}`;
   connection = new ReconnectingWebSocket(url);
 
   connection.addEventListener("message", (event) => {

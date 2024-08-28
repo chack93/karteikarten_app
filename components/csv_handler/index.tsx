@@ -1,7 +1,7 @@
 import { sendStateToServer } from "../../api/datasync";
 import { useAppStore } from "../app_store";
 import { useKarteikartenStore } from "../karteikarten/store";
-import { OverlayEnum, useLayoutStore } from "../layout/store";
+import { useLayoutStore } from "../layout/store";
 import { useTranslation } from "../translation/store";
 
 export function CsvHandler(): React.ReactElement {

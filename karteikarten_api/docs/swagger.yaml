@@ -6,7 +6,7 @@ info:
 servers:
   - url: /api
 paths:
-  /ws/{clientId}/{groupId}:
+  /datasync/{clientId}/{groupId}:
     get:
       description: |
         websocket endpoint.
