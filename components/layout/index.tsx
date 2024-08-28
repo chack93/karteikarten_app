@@ -41,28 +41,28 @@ export function Layout({ children, title = "" }: LayoutParam) {
           {t("app.title")} {title}
         </title>
         <meta name="description" content="Karteikarten" />
-        <link rel="icon" href="/karteikarten/favicon/favicon.ico" />
+        <link rel="icon" href="/favicon/favicon.ico" />
         <link
           rel="apple-touch-icon"
           sizes="180x180"
-          href="/karteikarten/favicon/apple-touch-icon.png"
+          href="/favicon/apple-touch-icon.png"
         />
         <link
           rel="icon"
           type="image/png"
           sizes="32x32"
-          href="/karteikarten/favicon/favicon-32x32.png"
+          href="/favicon/favicon-32x32.png"
         />
         <link
           rel="icon"
           type="image/png"
           sizes="16x16"
-          href="/karteikarten/favicon/favicon-16x16.png"
+          href="/favicon/favicon-16x16.png"
         />
-        <link rel="manifest" href="/karteikarten/favicon/site.webmanifest" />
+        <link rel="manifest" href="/favicon/site.webmanifest" />
         <link
           rel="mask-icon"
-          href="/karteikarten/favicon/safari-pinned-tab.svg"
+          href="/favicon/safari-pinned-tab.svg"
           color="#33050d"
         />
         <meta name="msapplication-TileColor" content="#da532c" />
@@ -75,7 +75,7 @@ export function Layout({ children, title = "" }: LayoutParam) {
             <Link href="/">
               <a className={`${styles.imgLogo} ${styles.jumpAnim}`}>
                 <img
-                  src="/karteikarten/image/logo.png"
+                  src="/image/logo.png"
                   className="w-10 h-10"
                   alt="Logo"
                   width={500}
