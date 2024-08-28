@@ -23,7 +23,7 @@ export const useKarteikartenStore = create<KarteikartenState>()(
           .flatMap((el) => el.split("\r"))
           .filter((el) => el)
           .map((el) => {
-            const [key, value] = el.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/g);
+            const [key, value] = el.split(/[,;](?=(?:(?:[^"]*"){2})*[^"]*$)/g);
             return {
               key: key.replace(/^"+|"+$/g, ""),
               value: value.replace(/^"+|"+$/g, ""),
