@@ -18,10 +18,8 @@ func (*ServerInterfaceImpl) CreateClient(ctx echo.Context) error {
 	}
 	var newEntry = Client{}
 	newEntry.Connected = requestBody.Connected
-	newEntry.Estimation = requestBody.Estimation
 	newEntry.Name = requestBody.Name
 	newEntry.SessionId = requestBody.SessionId
-	newEntry.Viewer = requestBody.Viewer
 	if err := CreateClient(&newEntry); err != nil {
 		return echo.NewHTTPError(http.StatusInternalServerError, "failed to create")
 	}
@@ -62,10 +60,8 @@ func (*ServerInterfaceImpl) UpdateClient(ctx echo.Context, id string) error {
 		return echo.NewHTTPError(http.StatusBadRequest, "bad body, expected format: Client.json")
 	}
 	client.Connected = requestBody.Connected
-	client.Estimation = requestBody.Estimation
 	client.Name = requestBody.Name
 	client.SessionId = requestBody.SessionId
-	client.Viewer = requestBody.Viewer
 	if err := UpdateClient(uuid, &client); err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return echo.NewHTTPError(http.StatusNotFound)

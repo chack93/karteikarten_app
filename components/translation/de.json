@@ -9,5 +9,20 @@
   "login.action.join": "Beitreten",
   "login.error.create_failed": "Erstellen eines neuen Raums ist fehlgeschlagen. Versuche es später erneut.",
   "login.error.unknown_join_code": "Unbekannter Beitrittscode. Überprüfe die Eingabe.",
-  "about.title": "Impressum"
+  "nav.join_link.text": "Beitritts Link:",
+  "nav.kk.action": "Karteikarten Menü",
+  "csv.download.text": "Beispiel .csv Datei herunterladen",
+  "csv.download.action": "csv herunterladen",
+  "csv.download.example_csv.name": "Beispiel.csv",
+  "csv.download.example_csv.content": "Frage 1,Antwort 1\nFrage 2,Antwort 2",
+  "csv.upload.action": "csv hochladen",
+  "csv.upload.current_entries": "Aktuelle Einträge: ",
+  "kk.title": "Karteikarten",
+  "kk.label.question": "Frage:",
+  "kk.label.answer": "Antwort:",
+  "kk.action.reveal": "Aufdecken",
+  "kk.action.next": "Nächste Karte",
+  "kk.error.join_failed": "Beitritt in den Raum ist fehlgeschlagen. Versuche es später erneut.",
+  "about.title": "Impressum",
+  "about.action.close": "Schließen"
 }

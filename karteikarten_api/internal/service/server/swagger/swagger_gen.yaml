@@ -26,15 +26,11 @@ components:
       - properties:
           connected:
             type: boolean
-          estimation:
-            type: string
           name:
             type: string
           sessionId:
             format: uuid
             type: string
-          viewer:
-            type: boolean
         type: object
     Error:
       properties:
@@ -115,7 +111,6 @@ paths:
   /client:
     post:
       description: Creates a new client, client will be destroyed after 48h of inactivity.
-        (no estimation or update to the client settings)
       operationId: createClient
       requestBody:
         content:

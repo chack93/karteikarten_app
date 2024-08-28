@@ -1,7 +1,7 @@
 APP_NAME = karteikarten_app_api
 GH_REPO_NAME = karteikarten_app
 VERSION = 1.0.2
-HOST ?= 127.0.0.1
+HOST ?= 0.0.0.0
 PORT ?= 8081
 DOCKER_NETWORK ?= net_app
 #DATABASE_URL ?= postgres://postgres:postgres@db_postgres:5432/${APP_NAME}?sslmode=disable

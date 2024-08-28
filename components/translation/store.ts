@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { devtools } from "zustand/middleware";
 import de from "./de.json";
-//import type {} from "@redux-devtools/extension"; // required for devtools typing
+import type {} from "@redux-devtools/extension"; // required for devtools typing
 
 interface TranslationState {
   translation: { [key: string]: string };

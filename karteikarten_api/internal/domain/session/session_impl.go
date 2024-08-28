@@ -58,7 +58,7 @@ func (*ServerInterfaceImpl) ReadSessionJoinCode(ctx echo.Context, joinCode strin
 	return ctx.JSON(http.StatusOK, response)
 }
 
-func (*ServerInterfaceImpl) UpdateSession(ctx echo.Context, id string, params UpdateSessionParams) error {
+func (*ServerInterfaceImpl) UpdateSession(ctx echo.Context, id string) error {
 	uuid, err := uuid.Parse(id)
 	if err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, "bad id, expected format: uuid")
@@ -70,9 +70,6 @@ func (*ServerInterfaceImpl) UpdateSession(ctx echo.Context, id string, params Up
 		}
 		return echo.NewHTTPError(http.StatusInternalServerError, "failed to read")
 	}
-	if session.OwnerClientId != nil && *session.OwnerClientId != params.ClientId {
-		return echo.NewHTTPError(http.StatusUnauthorized)
-	}
 
 	var requestBody UpdateSessionJSONRequestBody
 	if err := ctx.Bind(&requestBody); err != nil {
@@ -80,9 +77,7 @@ func (*ServerInterfaceImpl) UpdateSession(ctx echo.Context, id string, params Up
 		return echo.NewHTTPError(http.StatusBadRequest, "bad body, expected format: Session.json")
 	}
 	session.Description = requestBody.Description
-	session.CardSelectionList = requestBody.CardSelectionList
-	session.OwnerClientId = requestBody.OwnerClientId
-	session.GameStatus = requestBody.GameStatus
+	session.Csv = requestBody.Csv
 	if err := UpdateSession(uuid, &session); err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return echo.NewHTTPError(http.StatusNotFound)

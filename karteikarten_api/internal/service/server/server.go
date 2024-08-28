@@ -70,7 +70,7 @@ func (srv *Server) Init(wg *sync.WaitGroup) error {
 	apiGroup.GET("/doc/swagger.yaml", func(c echo.Context) error {
 		return c.HTMLBlob(http.StatusOK, swaggerYaml)
 	})
-	apiGroup.GET("/ws/:clientId/:groupId", func(c echo.Context) error {
+	apiGroup.GET("/datasync/:clientId/:groupId", func(c echo.Context) error {
 		clientID := c.Param("clientId")
 		groupID := c.Param("groupId")
 		conn, _, _, err := ws.UpgradeHTTP(c.Request(), c.Response().Writer)

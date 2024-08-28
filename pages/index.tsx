@@ -1,13 +1,18 @@
 import { useRouter } from "next/router";
 import React, { useEffect, useState } from "react";
-import Layout from "../components/layout";
+import { Layout } from "../components/layout";
 import { getStorage, setStorage } from "../api/localstorage";
 import {
   requestSessionCreate,
   requestSessionJoinCodeFetch,
-} from "../api/sp_rest";
-import { Close } from "../api/sp_websocket";
+} from "../api/session";
+import { Close } from "../api/datasync";
 import { useTranslation } from "../components/translation/store";
+import {
+  requestClientCreate,
+  requestClientFetch,
+  requestClientUpdate,
+} from "../api/client";
 
 export default function Home() {
   const router = useRouter();
@@ -30,12 +35,36 @@ export default function Home() {
     setStorage("joinCode", JoinCode);
   });
 
+  async function ensureClient(sessionId: string): Promise<void> {
+    let clientId = getStorage("clientId");
+    if (clientId) {
+      try {
+        await requestClientFetch(clientId);
+        await requestClientUpdate(clientId, "user", sessionId);
+      } catch (e) {
+        console.debug("login/ensureClient - client invalid, create new");
+        clientId = "";
+      }
+    }
+    if (!clientId) {
+      try {
+        const createResp = await requestClientCreate("user", sessionId);
+        clientId = createResp.body.id;
+      } catch (e) {
+        console.error("login/ensureClient - failed to create client", e);
+        throw e;
+      }
+    }
+    setStorage("clientId", clientId);
+  }
+
   async function createGame(_event: React.MouseEvent<HTMLButtonElement>) {
     setLoadingCreate(true);
     try {
       const newSession = await requestSessionCreate();
       setStorage("sessionId", newSession.body.id);
       setStorage("joinCode", newSession.body.joinCode);
+      await ensureClient(newSession.body.id);
     } catch (e) {
       console.error("login/create-session failed", e);
       setErrorMsg(t("login.error.create_failed"));
@@ -43,7 +72,7 @@ export default function Home() {
       return;
     }
     setLoadingCreate(false);
-    router.push("/list");
+    router.push("/kk");
   }
 
   async function joinGame(_event: React.MouseEvent<HTMLButtonElement>) {
@@ -53,6 +82,7 @@ export default function Home() {
     try {
       const session = await requestSessionJoinCodeFetch(JoinCode);
       setStorage("sessionId", session.body.id);
+      await ensureClient(session.body.id);
     } catch (e) {
       console.error("login/join-session failed", e);
       setErrorMsg(t("login.error.unknown_join_code"));
@@ -61,7 +91,7 @@ export default function Home() {
     }
 
     setLoadingJoin(false);
-    router.push("/list");
+    router.push("/kk");
   }
 
   return (

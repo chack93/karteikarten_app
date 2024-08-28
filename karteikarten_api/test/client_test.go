@@ -21,16 +21,12 @@ func TestClientCRUD(t *testing.T) {
 	// CREATE
 	var respCreate client.Client
 	var connected = false
-	var estimation = "3"
 	var name = "John Doe"
 	var sessionId = "1234"
-	var viewer = false
 	var createRequest = client.CreateClientJSONRequestBody{
-		Connected:  &connected,
-		Estimation: &estimation,
-		Name:       &name,
-		SessionId:  &sessionId,
-		Viewer:     &viewer,
+		Connected: &connected,
+		Name:      &name,
+		SessionId: &sessionId,
 	}
 	ctx, rec = Request("POST", baseURL, createRequest)
 	assert.NoError(t, impl.CreateClient(ctx))
@@ -38,10 +34,8 @@ func TestClientCRUD(t *testing.T) {
 	assert.NoError(t, json.Unmarshal(rec.Body.Bytes(), &respCreate))
 	assert.True(t, respCreate.ID.String() != "")
 	assert.Equal(t, *createRequest.Connected, *respCreate.Connected)
-	assert.Equal(t, *createRequest.Estimation, *respCreate.Estimation)
 	assert.Equal(t, *createRequest.Name, *respCreate.Name)
 	assert.Equal(t, *createRequest.SessionId, *respCreate.SessionId)
-	assert.Equal(t, *createRequest.Viewer, *respCreate.Viewer)
 
 	// READ
 	ctx, rec = Request("GET", baseURL+":id", nil)
@@ -50,23 +44,17 @@ func TestClientCRUD(t *testing.T) {
 	var respRead client.Client
 	assert.NoError(t, json.Unmarshal(rec.Body.Bytes(), &respRead))
 	assert.Equal(t, *createRequest.Connected, *respRead.Connected)
-	assert.Equal(t, *createRequest.Estimation, *respRead.Estimation)
 	assert.Equal(t, *createRequest.Name, *respRead.Name)
 	assert.Equal(t, *createRequest.SessionId, *respRead.SessionId)
-	assert.Equal(t, *createRequest.Viewer, *respRead.Viewer)
 
 	// UPDATE
 	connected = true
-	estimation = "12"
 	name = "Jane Viewer"
 	sessionId = "4321"
-	viewer = true
 	var updateRequest = client.UpdateClientJSONRequestBody{
-		Connected:  &connected,
-		Estimation: &estimation,
-		Name:       &name,
-		SessionId:  &sessionId,
-		Viewer:     &viewer,
+		Connected: &connected,
+		Name:      &name,
+		SessionId: &sessionId,
 	}
 	ctx, rec = Request("PUT", baseURL+":id", updateRequest)
 	assert.NoError(t, impl.UpdateClient(
@@ -81,10 +69,8 @@ func TestClientCRUD(t *testing.T) {
 	var respUpdate client.Client
 	assert.NoError(t, json.Unmarshal(rec.Body.Bytes(), &respUpdate))
 	assert.Equal(t, *createRequest.Connected, *respUpdate.Connected)
-	assert.Equal(t, *createRequest.Estimation, *respUpdate.Estimation)
 	assert.Equal(t, *createRequest.Name, *respUpdate.Name)
 	assert.Equal(t, *createRequest.SessionId, *respUpdate.SessionId)
-	assert.Equal(t, *createRequest.Viewer, *respUpdate.Viewer)
 
 	// READ NOT FOUND
 	ctx, rec = Request("GET", baseURL+":id", nil)

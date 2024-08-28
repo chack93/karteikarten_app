@@ -23,11 +23,9 @@ type Client struct {
 // ClientNew defines model for ClientNew.
 type ClientNew struct {
 	// Embedded fields due to inline allOf schema
-	Connected  *bool   `json:"connected,omitempty"`
-	Estimation *string `json:"estimation,omitempty"`
-	Name       *string `json:"name,omitempty"`
-	SessionId  *string `json:"sessionId,omitempty"`
-	Viewer     *bool   `json:"viewer,omitempty"`
+	Connected *bool   `json:"connected,omitempty"`
+	Name      *string `json:"name,omitempty"`
+	SessionId *string `json:"sessionId,omitempty"`
 }
 
 // CreateClientJSONBody defines parameters for CreateClient.

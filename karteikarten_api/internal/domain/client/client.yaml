@@ -1,7 +1,7 @@
 paths:
   /client:
     post:
-      description: Creates a new client, client will be destroyed after 48h of inactivity. (no estimation or update to the client settings)
+      description: Creates a new client, client will be destroyed after 48h of inactivity.
       operationId: createClient
       requestBody:
         description: Details about new client to create
@@ -110,10 +110,6 @@ components:
         - type: object
           properties:
             name:
-              type: string
-            viewer:
-              type: boolean
-            estimation:
               type: string
             connected:
               type: boolean

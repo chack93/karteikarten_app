@@ -138,44 +138,29 @@ func handleUpdateRequest(msg *nats.Msg) {
 	if updateRequest.Client != nil {
 		connectedTrue := true
 		cl.Connected = &connectedTrue
-		cl.Estimation = updateRequest.Client.Estimation
 		cl.Name = updateRequest.Client.Name
 		cl.SessionId = updateRequest.Client.SessionId
 		if cl.SessionId == nil || len(*cl.SessionId) < 1 {
 			grpId := groupID.String()
 			cl.SessionId = &grpId
 		}
-		cl.Viewer = updateRequest.Client.Viewer
 	}
 
-	if se.OwnerClientId != nil && *se.OwnerClientId == cl.ID.String() && updateRequest.Session != nil {
-		oldGameStatus := ""
-		if se.GameStatus != nil {
-			oldGameStatus = *se.GameStatus
-		}
-		se.CardSelectionList = updateRequest.Session.CardSelectionList
+	if updateRequest.Session != nil {
 		se.Description = updateRequest.Session.Description
-		//se.OwnerClientId = updateRequest.Session.OwnerClientId
-		se.GameStatus = updateRequest.Session.GameStatus
+		se.Csv = updateRequest.Session.Csv
 		if err := session.UpdateSession(clientID, &se); err != nil {
 			log.Errorf("update client failed, action: %s, cID: %s, gID: %s, err: %v", action, clientID.String(), groupID.String(), err)
 			return
 		}
 
-		if oldGameStatus != "new" && updateRequest.Session.GameStatus != nil && *updateRequest.Session.GameStatus == "new" {
-			var clientList []client.Client
-			if err := client.ListClientOfSession(groupID, &clientList); err != nil {
-				log.Errorf("update failed, action: %s, cID: %s, gID: %s, err: %v", action, clientID.String(), groupID.String(), err)
-			}
-
-			for _, el := range clientList {
-				emptyEstimation := ""
-				el.Estimation = &emptyEstimation
-				cl.Estimation = &emptyEstimation
-
-				if err := client.UpdateClient(el.ID, &el); err != nil {
-					log.Errorf("new game / reset client estimation failed, action: %s, cID: %s, gID: %s, err: %v", action, clientID.String(), groupID.String(), err)
-				}
+		var clientList []client.Client
+		if err := client.ListClientOfSession(groupID, &clientList); err != nil {
+			log.Errorf("update failed, action: %s, cID: %s, gID: %s, err: %v", action, clientID.String(), groupID.String(), err)
+		}
+		for _, el := range clientList {
+			if err := client.UpdateClient(el.ID, &el); err != nil {
+				log.Errorf("new game / reset client estimation failed, action: %s, cID: %s, gID: %s, err: %v", action, clientID.String(), groupID.String(), err)
 			}
 		}
 
